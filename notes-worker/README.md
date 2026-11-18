@@ -55,6 +55,10 @@ npm run typecheck
   suscripciones, "visto"), WebSockets con hibernación, presencia, "está
   escribiendo…" y avisos push.
 - `src/webpush.ts` — Web Push sin dependencias (RFC 8291 + VAPID RFC 8292).
+- `src/monthiversary.ts` — avisos del mesiversario: un cron cada hora revisa
+  si toca el aviso del día antes o el del mismo día (hora de Bogotá) y el
+  cuarto lo manda una sola vez a los dos. Textos y horas en
+  `../src/data/reminders.ts`; después de cambiarlos, `npm run deploy`.
 - `../src/features/notes/protocol.ts` — los mensajes que se intercambian
   (compartido con la página).
 

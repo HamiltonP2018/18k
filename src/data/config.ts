@@ -38,11 +38,10 @@ export const config = {
 
   /** Notitas compartidas (sección "Nuestro rincón"). */
   notes: {
-    /**
-     * Cómo aparecen las notitas de él (para ella). La página nunca muestra su
-     * nombre: si quieres, cámbialo por un apodo.
-     */
-    hisLabel: 'Tu amor',
+    /** Cómo aparecen las notitas de él: ella le dice H. */
+    hisLabel: 'H',
+    /** Cómo aparecen las notitas de ella ("Mocosa te dejó una notita"). */
+    herLabel: 'Mocosa',
   },
 } as const
 

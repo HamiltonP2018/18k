@@ -14,6 +14,7 @@ import {
 } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { config } from '../data/config'
+import { formatNumber, numberWord } from './words'
 
 /** Fecha (local) en que empezó todo. */
 export const START_DATE = new Date(config.startDate)
@@ -172,26 +173,11 @@ export function formatWeekday(d: Date | string): string {
   return format(asDate(d), 'EEEE', { locale: es })
 }
 
-const nf = new Intl.NumberFormat('es-CO')
-/** 1234567 → "1.234.567" */
-export function formatNumber(n: number): string {
-  return nf.format(n)
-}
+export { formatNumber, numberWord }
 
 /** plural(1, 'día', 'días') → "1 día" */
 export function plural(n: number, one: string, many: string): string {
   return `${formatNumber(n)} ${n === 1 ? one : many}`
-}
-
-const WORDS = [
-  'cero', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez',
-  'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte',
-  'veintiún', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco', 'veintiséis', 'veintisiete', 'veintiocho', 'veintinueve', 'treinta',
-]
-
-/** 6 → "seis", 1 → "un" (para "un mes"); >30 → dígitos. */
-export function numberWord(n: number): string {
-  return Number.isInteger(n) && n >= 0 && n < WORDS.length ? WORDS[n] : formatNumber(n)
 }
 
 /** Primera letra en mayúscula: "seis meses" → "Seis meses". */

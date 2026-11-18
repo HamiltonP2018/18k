@@ -108,8 +108,8 @@ export type ServerMessage =
 export interface PushPayload {
   title: string
   body: string
-  /** Notitas sin leer (para el globito del ícono). */
-  badge: number
+  /** Notitas sin leer (para el globito del ícono). Sin él, el globito no cambia. */
+  badge?: number
   /** Ruta relativa que se abre al tocar la notificación. */
   url: string
   tag: string

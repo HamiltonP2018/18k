@@ -94,8 +94,8 @@ export function PushToggle() {
           {state === 'denied'
             ? 'Los avisos están bloqueados. Actívalos en los ajustes del navegador (o de la app) para esta página.'
             : state === 'on'
-              ? `Te llegará una notificación cuando ${other} te deje algo.`
-              : `Recibe una notificación cuando ${other} te deje una notita o un dibujito.`}
+              ? `Te llegará una notificación cuando ${other} te deje algo, y un aviso en cada mesiversario.`
+              : `Recibe una notificación cuando ${other} te deje una notita o un dibujito, y un aviso en cada mesiversario.`}
         </p>
         {error && <p className={styles.error}>{error}</p>}
       </div>

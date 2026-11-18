@@ -246,3 +246,83 @@ test('flujo completo: tiempo real, presencia, corazones, borrado, dibujos y push
   her.ws.close()
   him2.ws.close()
 })
+
+test('avisos del mesiversario: el día antes, el mismo día y el aniversario', { skip }, async () => {
+  const her = client('her')
+  const him = client('him')
+  await Promise.all([her.opened, him.opened])
+  await Promise.all([her.waitFor((m) => m.t === 'hello'), him.waitFor((m) => m.t === 'hello')])
+  const herB = await makeBrowserSubscription(`http://127.0.0.1:${pushPort}/push/her-mv`)
+  const himB = await makeBrowserSubscription(`http://127.0.0.1:${pushPort}/push/him-mv`)
+  her.send({ t: 'sub', sub: herB.sub })
+  him.send({ t: 'sub', sub: himB.sub })
+  await her.waitFor((m) => m.t === 'subbed' && m.endpoint.endsWith('/push/her-mv'))
+  await him.waitFor((m) => m.t === 'subbed' && m.endpoint.endsWith('/push/him-mv'))
+
+  // Dispara el cron como si fuera esa hora (en Bogotá).
+  const tick = async (localIso) => {
+    const r = await fetch(`${BASE}/cdn-cgi/local/scheduled?cron=0+*+*+*+*&time=${Date.parse(`${localIso}-05:00`)}`)
+    assert.equal(r.status, 200, await r.text())
+  }
+  const pushFor = async (path, from, ms = 5000) => {
+    const t0 = Date.now()
+    for (;;) {
+      const p = pushes.slice(from).find((x) => x.path === path)
+      if (p || Date.now() - t0 > ms) return p
+      await new Promise((r) => setTimeout(r, 50))
+    }
+  }
+  const read = async (p, b) => JSON.parse((await decryptPayload(p.body, b.keys, b.sub.keys.p256dh, b.sub.keys.auth)).text)
+  const mine = (from) => pushes.slice(from).filter((x) => x.path.endsWith('-mv'))
+
+  // Día antes del 7.º mesiversario, a las 20:00. Llega aunque tengan la página abierta.
+  let n0 = pushes.length
+  await tick('2026-12-17T20:00:00')
+  const eveHer = await pushFor('/push/her-mv', n0)
+  const eveHim = await pushFor('/push/him-mv', n0)
+  assert.ok(eveHer && eveHim, 'deben llegar los avisos a los dos')
+  assert.equal(eveHer.headers['topic'], 'mesiversario')
+  assert.equal(eveHer.headers['ttl'], '10800')
+  assert.deepEqual(await read(eveHer, herB), {
+    title: 'Mañana es nuestro día, mi amorcito 💕',
+    body: 'Mañana cumplimos siete meses, y yo cada día te quiero más. Duerme bonito, cielo. — H',
+    url: './#/',
+    tag: 'mesiversario',
+  })
+  const himPayload = await read(eveHim, himB)
+  assert.equal(himPayload.title, 'Mañana cumples siete meses con Katherine 💕')
+  assert.equal(himPayload.url, './#/notas')
+
+  // El mismo aviso no se repite (cron repetido o una hora después).
+  n0 = pushes.length
+  await tick('2026-12-17T20:00:00')
+  await tick('2026-12-17T21:00:00')
+  await new Promise((r) => setTimeout(r, 400))
+  assert.equal(mine(n0).length, 0, 'el aviso de "mañana" sale una sola vez')
+
+  // Fuera de horario o sin mesiversario: nada.
+  await tick('2026-12-18T07:00:00')
+  await tick('2026-12-20T08:00:00')
+  await new Promise((r) => setTimeout(r, 400))
+  assert.equal(mine(n0).length, 0)
+
+  // El mismo día, a las 8:00.
+  n0 = pushes.length
+  await tick('2026-12-18T08:00:00')
+  const day = await pushFor('/push/her-mv', n0)
+  assert.ok(day)
+  assert.equal(day.headers['ttl'], '43200')
+  const dayPayload = await read(day, herB)
+  assert.equal(dayPayload.title, 'Hoy cumplimos siete meses ❤️')
+  assert.equal(dayPayload.badge, undefined, 'no toca el globito de notitas')
+
+  // Primer año (con el cron atrasado una hora).
+  n0 = pushes.length
+  await tick('2027-05-18T09:00:00')
+  const year = await read(await pushFor('/push/her-mv', n0), herB)
+  assert.equal(year.title, '¡Feliz aniversario, mocosa! 🎉❤️')
+  assert.match(year.body, /un año juntos/)
+
+  her.ws.close()
+  him.ws.close()
+})

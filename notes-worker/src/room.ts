@@ -4,6 +4,7 @@
  * - WebSockets con hibernación: mientras nadie escribe, no consume nada.
  * - Reenvía al instante cada notita, corazón, borrado y "está escribiendo…".
  * - Si la otra persona no tiene la página abierta, le manda una notificación push.
+ * - Avisos del mesiversario (los dispara el cron del Worker: ver monthiversary.ts).
  */
 import { DurableObject } from 'cloudflare:workers'
 import {
@@ -20,8 +21,19 @@ import {
   type PushPayload,
   type ServerMessage,
 } from '../../src/features/notes/protocol'
-import { sendWebPush, type VapidKeys } from './webpush'
+import { config } from '../../src/data/config'
+import { reminderMessage, reminderSettings } from '../../src/data/reminders'
+import { sendWebPush, type PushOptions, type VapidKeys } from './webpush'
+import { dueReminders, type ReminderSchedule } from './monthiversary'
 import type { WorkerEnv } from './env'
+
+/** Nombre del único cuarto (los dos comparten el mismo). */
+export const ROOM_NAME = 'nosotros'
+
+export const REMINDER_SCHEDULE: ReminderSchedule = { startDate: config.startDate, ...reminderSettings }
+
+/** Cuánto espera el servicio push si el celular está apagado: el aviso de "mañana" caduca a medianoche. */
+const REMINDER_TTL = { eve: 3 * 3600, day: 12 * 3600 } as const
 
 interface Attachment {
   author: Author
@@ -106,6 +118,7 @@ export class NotesRoom extends DurableObject<WorkerEnv> {
         created_at INTEGER NOT NULL
       );
       CREATE TABLE IF NOT EXISTS seen (author TEXT PRIMARY KEY, at INTEGER NOT NULL);
+      CREATE TABLE IF NOT EXISTS reminders (key TEXT PRIMARY KEY, sent_at INTEGER NOT NULL);
     `)
     // Latido: responde "pong" sin despertar al objeto.
     ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping', 'pong'))
@@ -317,36 +330,62 @@ export class NotesRoom extends DurableObject<WorkerEnv> {
 
   /** Notificación push para `to`, salvo que tenga la página abierta y visible. */
   private async notify(to: Author, title: string, body: string) {
-    const vapid = this.vapid()
-    if (!vapid) return
+    if (!this.vapid()) return
     const watching = this.ctx.getWebSockets(to).some((ws) => {
       const a = ws.deserializeAttachment() as Attachment | null
       return ws.readyState === OPEN && a?.visible
     })
     if (watching) return
 
-    const subs = this.sql.exec<SubRow>('SELECT endpoint, author, p256dh, auth FROM subs WHERE author = ?', to).toArray()
-    if (!subs.length) return
     const unread = this.sql
       .exec<{ n: number }>('SELECT COUNT(*) AS n FROM notes WHERE author = ? AND created_at > ?', otherAuthor(to), this.seenAt(to))
       .one().n
-    const payload: PushPayload = { title, body, badge: unread, url: './#/notas', tag: 'notitas' }
-    const json = JSON.stringify(payload)
+    await this.pushTo(to, { title, body, badge: unread, url: './#/notas', tag: 'notitas' }, { topic: 'notitas', urgency: 'high' })
+  }
 
-    await Promise.all(
+  /**
+   * Avisos del mesiversario (el día antes y el mismo día) para los dos.
+   * La llama el cron del Worker cada hora; cada aviso sale una sola vez.
+   * Devuelve cuántas notificaciones aceptó el servicio push.
+   */
+  async sendReminders(nowMs: number): Promise<number> {
+    if (!this.vapid()) return 0
+    let sent = 0
+    for (const due of dueReminders(nowMs, REMINDER_SCHEDULE)) {
+      if (this.sql.exec('SELECT 1 FROM reminders WHERE key = ?', due.key).toArray().length) continue
+      this.sql.exec('INSERT INTO reminders (key, sent_at) VALUES (?, ?)', due.key, Date.now())
+      for (const to of ['her', 'him'] as const) {
+        const { title, body, url } = reminderMessage(due.kind, to, due.months)
+        // Sin `badge`: el globito del ícono es solo para notitas sin leer.
+        sent += await this.pushTo(to, { title, body, url, tag: 'mesiversario' }, { topic: 'mesiversario', urgency: 'high', ttl: REMINDER_TTL[due.kind] })
+      }
+    }
+    return sent
+  }
+
+  /** Manda `payload` a todos los dispositivos de `to` y borra las suscripciones vencidas. Devuelve cuántos lo aceptaron. */
+  private async pushTo(to: Author, payload: PushPayload, opts: PushOptions): Promise<number> {
+    const vapid = this.vapid()
+    if (!vapid) return 0
+    const subs = this.sql.exec<SubRow>('SELECT endpoint, author, p256dh, auth FROM subs WHERE author = ?', to).toArray()
+    const json = JSON.stringify(payload)
+    const ok = await Promise.all(
       subs.map(async (s) => {
         try {
-          const res = await sendWebPush(s, json, vapid, { topic: 'notitas', urgency: 'high' })
+          const res = await sendWebPush(s, json, vapid, opts)
           if (res.status === 404 || res.status === 410) {
             this.sql.exec('DELETE FROM subs WHERE endpoint = ?', s.endpoint) // suscripción vencida
           } else if (!res.ok) {
             console.warn('push', res.status, (await res.text()).slice(0, 200))
           }
+          return res.ok
         } catch (err) {
           console.warn('push error', err)
+          return false
         }
       }),
     )
+    return ok.filter(Boolean).length
   }
 
   // ---------------------------------------------------------------------------

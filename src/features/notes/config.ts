@@ -16,8 +16,8 @@ export const wsUrl = (author: Author) =>
 
 export const imageSrc = (id: string) => `${NOTES_URL}/img/${encodeURIComponent(id)}?key=${encodeURIComponent(NOTES_KEY)}`
 
-/** Nombre visible de cada autor (la página nunca muestra el nombre de él). */
-export const authorLabel = (a: Author): string => (a === 'her' ? config.herName : config.notes.hisLabel)
+/** Nombre visible de cada autor en las notitas (apodos: ver config.notes). */
+export const authorLabel = (a: Author): string => (a === 'her' ? config.notes.herLabel : config.notes.hisLabel)
 
 /** Igual que authorLabel, pero para usar a mitad de frase ("cuando tu amor te deje…"). */
 export const authorInSentence = (a: Author): string => {

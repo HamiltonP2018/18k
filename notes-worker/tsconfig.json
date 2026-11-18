@@ -13,5 +13,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["src", "../src/features/notes/protocol.ts"]
+  "include": ["src", "../src/features/notes/protocol.ts", "../src/data/config.ts", "../src/data/reminders.ts", "../src/lib/words.ts"]
 }
