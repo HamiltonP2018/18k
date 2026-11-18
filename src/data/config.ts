@@ -14,8 +14,8 @@ export const config = {
    */
   fromName: '',
 
-  /** Firma manuscrita al final de la carta. */
-  signature: 'Love You',
+  /** Firma manuscrita (carta, cartas «Ábrela cuando…» y final): ella le dice H. */
+  signature: 'H',
 
   /** Fecha y hora (local) en que empezó todo. */
   startDate: '2026-05-18T00:00:00',
