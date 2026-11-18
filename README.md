@@ -12,12 +12,46 @@ contraseña (nuestra fecha) y hecha en **React + TypeScript + Vite**.
 3. **Inicio** (una sola página con scroll):
    portada · contador en vivo · capítulos de la historia · carrusel 3D de
    recuerdos · momentos en video · razones por las que te amo · la carta ·
-   promesas · final con un corazón hecho de fotos.
+   cartas «Ábrela cuando…» · promesas · final con un corazón hecho de fotos ·
+   «Nuestro rincón» (adelanto de las notitas + instalar la app).
 4. **Vistas a pantalla completa**: galería completa por álbumes
    (`#/recuerdos`), historias en video (`#/momentos`) y la carta con sobre
    animado (`#/carta`).
 5. **11:11**: si la página está abierta a las 11:11 aparece un aviso para pedir
    un deseo (para verlo antes: agrega `?deseo` a la URL, antes del `#`).
+6. **Notitas** (`#/notas`): muro compartido de notitas y dibujitos en tiempo
+   real, con «está escribiendo…», corazones y notificaciones push. Necesita el
+   servidor de `notes-worker/` (ver más abajo); sin él, la sección no aparece.
+
+El candado y la intro se recuerdan en cada dispositivo: la segunda vez entra
+directo a la historia (el botón «volver a empezar» del final los repite).
+
+## App instalable (PWA)
+
+La página se puede instalar en el celular como una app (ícono propio, pantalla
+completa, abre sin internet con lo último que vio):
+
+- **Android / Chrome**: botón «Instalar» en «Nuestro rincón» y en Notitas.
+- **iPhone**: Compartir → «Agregar a inicio» (la página muestra los pasos).
+  En iPhone las notificaciones solo funcionan con la app instalada.
+
+Archivos: `public/manifest.webmanifest`, `public/sw.js` (service worker: caché
+y notificaciones) y `public/icons/` (se regeneran con
+`node scripts/make-icons.mjs`). El nombre bajo el ícono es «Nosotros»
+(`short_name` del manifest y `apple-mobile-web-app-title` en `index.html`).
+
+> Widgets en la pantalla de inicio: ni iPhone ni Android permiten que una app
+> web ponga widgets. Lo más cercano son las notificaciones y el globito con el
+> número de notitas sin leer sobre el ícono. Un widget real requiere una app
+> nativa aparte.
+
+## Vista previa del link (WhatsApp)
+
+Al compartir el link aparece `public/og.jpg` (un sobre sellado «Para
+Katherine»). Las redes exigen la URL absoluta de la imagen: en Render se toma
+sola de `RENDER_EXTERNAL_URL`; con dominio propio, define `SITE_URL` al hacer
+el build. WhatsApp guarda la vista previa de cada link: si ya lo habías
+enviado antes, comparte `https://…/?v=2` para que la genere de nuevo.
 
 ## Comandos
 
@@ -37,13 +71,14 @@ Todo el texto vive en `src/data/`:
 
 | Archivo | Qué contiene |
 | --- | --- |
-| `config.ts` | Nombres, fecha de inicio, contraseña, firma y canción |
+| `config.ts` | Nombres, fecha de inicio, contraseña, firma, canción y cómo aparece él en las notitas (`notes.hisLabel`) |
 | `letter.ts` | La carta (tal cual) |
 | `timeline.ts` | Capítulos de la historia (fecha, título, texto, fotos) |
 | `photos.ts` | Leyendas, álbumes, puntos focales y qué fotos van en cada sección (`picks`) |
 | `reasons.ts` | Razones por las que te amo |
 | `promises.ts` | Promesas |
 | `intro.ts` | Frases de la intro |
+| `openWhen.ts` | Cartas «Ábrela cuando…» (borradores: revísalos) |
 
 ## Agregar fotos o videos
 
@@ -72,6 +107,20 @@ lo que se publica son las versiones optimizadas de `public/media/`.
 (Vercel, Netlify, GitHub Pages…), incluso dentro de una subcarpeta: las rutas
 son relativas y la navegación usa `#/`.
 
+### Notitas compartidas (opcional)
+
+Las notitas viven en un pequeño servidor gratuito de Cloudflare
+(`notes-worker/`, ver su README). Una vez publicado, agrega en Render
+(Environment) y vuelve a desplegar:
+
+| Variable | Valor |
+| --- | --- |
+| `VITE_NOTES_URL` | URL del Worker (`https://notitas.….workers.dev`) |
+| `VITE_NOTES_KEY` | La clave que imprime `npm run deploy` del Worker |
+
+En local: crea `.env.development.local` con las mismas variables apuntando a
+`http://localhost:8787` y corre `npm run dev` dentro de `notes-worker/`.
+
 > La contraseña protege la sorpresa, no la privacidad: es una página estática y
 > sus fotos son accesibles para quien tenga el enlace. La página incluye
 > `noindex` para que los buscadores no la muestren.
@@ -95,8 +144,10 @@ src/
   lib/          medios, fechas, animaciones, rutas, confeti
   pages/        página de inicio (compone las secciones)
   styles/       tokens de diseño y estilos globales
-scripts/        pipeline de medios
+scripts/        pipeline de medios e íconos de la app
 media-src/      fotos y videos originales
+notes-worker/   servidor de las notitas (Cloudflare Worker + Durable Object)
+public/         sw.js, manifest, íconos, og.jpg, fotos y música
 legacy/         la versión original en un solo HTML
 ```
 

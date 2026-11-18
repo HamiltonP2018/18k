@@ -10,8 +10,10 @@ import { CarouselSection } from '../features/gallery/CarouselSection'
 import { MomentsSection } from '../features/moments/MomentsSection'
 import { ReasonsSection } from '../features/reasons/ReasonsSection'
 import { LetterTeaser } from '../features/letter/LetterTeaser'
+import { OpenWhenSection } from '../features/openwhen/OpenWhenSection'
 import { PromisesSection } from '../features/promises/PromisesSection'
 import { FinaleSection } from '../features/finale/FinaleSection'
+import { CornerSection } from '../features/notes/CornerSection'
 import styles from './HomePage.module.css'
 
 export default function HomePage() {
@@ -24,8 +26,10 @@ export default function HomePage() {
       <MomentsSection />
       <ReasonsSection />
       <LetterTeaser />
+      <OpenWhenSection />
       <PromisesSection />
       <FinaleSection />
+      <CornerSection />
     </Page>
   )
 }

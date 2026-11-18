@@ -12,9 +12,14 @@ import '@fontsource/alex-brush/400.css'
 import './styles/tokens.css'
 import './styles/global.css'
 import App from './App'
+import { initPwa } from './lib/pwa'
 
 // El scroll lo restaura <Page> al navegar; evita que el navegador interfiera.
 if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+
+// App instalable: service worker + botón "Instalar" (antes de montar React
+// para no perder el evento beforeinstallprompt).
+initPwa()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

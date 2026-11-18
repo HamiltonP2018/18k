@@ -1,0 +1,123 @@
+.wrap {
+  display: grid;
+  gap: 14px;
+}
+
+.pad {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  box-shadow:
+    0 16px 30px -18px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+}
+.erasing {
+  cursor: cell;
+}
+
+.hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: rgba(58, 34, 48, 0.4);
+}
+
+.tools {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.inks {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.ink {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+  transition: transform 160ms var(--ease-out), box-shadow 160ms;
+}
+.ink.selected {
+  transform: scale(1.12);
+  box-shadow:
+    0 0 0 2px var(--c-bg-2),
+    0 0 0 4px var(--c-gold);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.sizes,
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.size,
+.tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 8px;
+  border-radius: 12px;
+  color: var(--c-text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--c-line);
+  transition: color 200ms, background 200ms, border-color 200ms;
+}
+.size span {
+  display: block;
+  border-radius: 50%;
+}
+.size.selected,
+.toolOn {
+  color: var(--c-gold-bright);
+  border-color: var(--c-line-gold);
+  background: rgba(243, 201, 105, 0.12);
+}
+.tool svg {
+  width: 20px;
+  height: 20px;
+}
+.tool:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.danger {
+  color: #fff;
+  background: #c81d3a;
+  border-color: #c81d3a;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

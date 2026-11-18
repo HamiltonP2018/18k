@@ -1,0 +1,147 @@
+.sheet {
+  width: min(100%, 520px);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--c-line);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-caps);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  transition: color 200ms, background 200ms;
+}
+.tab svg {
+  width: 17px;
+  height: 17px;
+}
+.tabOn {
+  color: var(--c-gold-bright);
+  background: linear-gradient(135deg, rgba(243, 201, 105, 0.16), rgba(255, 122, 147, 0.2));
+  box-shadow: inset 0 0 0 1px rgba(243, 201, 105, 0.32);
+}
+
+.colors {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 18px 0 16px;
+}
+
+.swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  rotate: -4deg;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 160ms var(--ease-out), box-shadow 160ms;
+}
+.swatchOn {
+  transform: scale(1.15);
+  box-shadow:
+    0 0 0 2px var(--c-bg-2),
+    0 0 0 4px var(--c-gold);
+}
+
+.paper {
+  position: relative;
+  border-radius: 6px;
+  padding: 18px 18px 26px;
+  box-shadow:
+    0 16px 30px -18px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.textarea {
+  display: block;
+  width: 100%;
+  min-height: 170px;
+  resize: vertical;
+  border: 0;
+  outline: 0;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0, transparent 33px, rgba(143, 42, 68, 0.14) 33px, rgba(143, 42, 68, 0.14) 34px);
+  color: var(--c-paper-ink);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 34px;
+}
+.textarea::placeholder {
+  color: rgba(58, 34, 48, 0.38);
+}
+
+.counter {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  font-size: 0.68rem;
+  color: rgba(58, 34, 48, 0.45);
+}
+
+.draw {
+  display: grid;
+  gap: 12px;
+}
+
+.caption {
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid var(--c-line-strong);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--c-text-strong);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.12rem;
+  outline: 0;
+}
+.caption:focus {
+  border-color: var(--c-line-gold);
+}
+
+.error,
+.offline {
+  margin-top: 14px;
+  font-size: var(--fs-small);
+  text-align: center;
+}
+.error {
+  color: #ff9aa9;
+}
+.offline {
+  color: var(--c-text-faint);
+}
+
+.send {
+  margin-top: 18px;
+}
+
+.spin {
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

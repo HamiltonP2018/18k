@@ -2,7 +2,8 @@
  * Flujo de la experiencia:
  *   1. Candado (contraseña = nuestra fecha)
  *   2. Intro cinematográfica (se puede saltar)
- *   3. La historia: inicio + vistas (recuerdos, momentos, carta)
+ *   3. La historia: inicio + vistas (recuerdos, momentos, carta, notitas)
+ * El candado y la intro se recuerdan en el dispositivo: al volver, entra directo.
  */
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router'
@@ -17,15 +18,18 @@ import { IntroSequence } from './features/intro/IntroSequence'
 import { WishMoment } from './features/wish/WishMoment'
 import HomePage from './pages/HomePage'
 import { ROUTES } from './lib/routes'
+import { NotesProvider } from './features/notes/NotesContext'
+import { notesEnabled } from './features/notes/config'
 
 const GalleryPage = lazy(() => import('./features/gallery/GalleryPage'))
 const MomentsPage = lazy(() => import('./features/moments/MomentsPage'))
 const LetterPage = lazy(() => import('./features/letter/LetterPage'))
+const NotesPage = lazy(() => import('./features/notes/NotesPage'))
 
 function AppRoutes() {
   const location = useLocation()
   return (
-    <>
+    <NotesProvider>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path={ROUTES.home} element={<HomePage />} />
@@ -53,12 +57,22 @@ function AppRoutes() {
               </Suspense>
             }
           />
+          {notesEnabled && (
+            <Route
+              path={ROUTES.notes}
+              element={
+                <Suspense fallback={null}>
+                  <NotesPage />
+                </Suspense>
+              }
+            />
+          )}
           <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
         </Routes>
       </AnimatePresence>
       <Dock />
       <WishMoment />
-    </>
+    </NotesProvider>
   )
 }
 

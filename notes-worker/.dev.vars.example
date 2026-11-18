@@ -1,0 +1,7 @@
+# Copia este archivo como .dev.vars para probar en local (npm run dev).
+NOTES_KEY="clave-local"
+ALLOWED_ORIGINS=""
+VAPID_PUBLIC_KEY=""
+VAPID_PRIVATE_KEY=""
+VAPID_SUBJECT=""
+ALLOW_INSECURE_PUSH="0"

@@ -6,13 +6,15 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { AnimatePresence, motion } from 'motion/react'
-import { BookHeart, Clapperboard, House, Images, Mail, type LucideIcon } from 'lucide-react'
+import { BookHeart, Clapperboard, House, Images, Mail, MessageCircleHeart, type LucideIcon } from 'lucide-react'
 import { useApp } from '../context/AppContext'
+import { useNotes } from '../features/notes/NotesContext'
+import { notesEnabled } from '../features/notes/config'
 import { ROUTES, SECTIONS, scrollToSection, type HomeNavState, type SectionId } from '../lib/routes'
 import { cx } from '../lib/cx'
 import styles from './Dock.module.css'
 
-type DockKey = 'inicio' | 'historia' | 'recuerdos' | 'momentos' | 'carta'
+type DockKey = 'inicio' | 'historia' | 'recuerdos' | 'momentos' | 'carta' | 'notitas'
 
 interface DockItem {
   key: DockKey
@@ -29,6 +31,8 @@ const ITEMS: DockItem[] = [
   { key: 'recuerdos', label: 'Recuerdos', Icon: Images, route: ROUTES.gallery },
   { key: 'momentos', label: 'Momentos', Icon: Clapperboard, route: ROUTES.moments },
   { key: 'carta', label: 'Carta', Icon: Mail, route: ROUTES.letter },
+  // Solo si el servidor de notitas está configurado.
+  ...(notesEnabled ? [{ key: 'notitas', label: 'Notitas', Icon: MessageCircleHeart, route: ROUTES.notes } satisfies DockItem] : []),
 ]
 
 /** Qué botón se ilumina según la sección visible del inicio. */
@@ -40,8 +44,10 @@ const SECTION_TO_KEY: Record<SectionId, DockKey> = {
   recuerdos: 'recuerdos',
   momentos: 'momentos',
   carta: 'carta',
+  abrela: 'carta',
   promesas: 'carta',
   final: 'carta',
+  rincon: notesEnabled ? 'notitas' : 'carta',
 }
 
 function useActiveSection(enabled: boolean): SectionId {
@@ -96,6 +102,7 @@ function useHideOnScroll(): boolean {
 
 export function Dock() {
   const { immersive } = useApp()
+  const { unread } = useNotes()
   const location = useLocation()
   const navigate = useNavigate()
   const onHome = location.pathname === ROUTES.home
@@ -135,7 +142,7 @@ export function Dock() {
           exit={{ y: 120, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 30 }}
         >
-          <ul className={styles.dock}>
+          <ul className={cx(styles.dock, ITEMS.length > 5 && styles.six)}>
             {ITEMS.map((item) => {
               const isActive = item.key === activeKey
               return (
@@ -155,6 +162,11 @@ export function Dock() {
                     )}
                     <item.Icon className={styles.icon} aria-hidden strokeWidth={1.6} />
                     <span className={styles.label}>{item.label}</span>
+                    {item.key === 'notitas' && unread > 0 && (
+                      <span className={styles.badge} aria-label={`${unread} sin leer`}>
+                        {unread > 9 ? '9+' : unread}
+                      </span>
+                    )}
                   </button>
                 </li>
               )

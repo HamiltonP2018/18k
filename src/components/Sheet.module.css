@@ -1,0 +1,94 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--c-overlay);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.panel {
+  position: relative;
+  width: min(100%, 560px);
+  max-height: calc(100dvh - var(--safe-top) - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 30px clamp(18px, 5vw, 32px) calc(var(--safe-bottom) + 26px);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(180deg, rgba(36, 14, 28, 0.97), rgba(16, 5, 13, 0.98));
+  border: 1px solid var(--c-glass-border);
+  border-bottom: 0;
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6), var(--inset-glass);
+  color: var(--c-text);
+}
+
+.paper {
+  color: var(--c-paper-ink);
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.7), transparent 60%),
+    linear-gradient(180deg, #fdf7ec, #f5ead6);
+  border-color: rgba(201, 151, 59, 0.4);
+}
+
+@media (min-width: 640px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+  }
+  .panel {
+    border-radius: var(--radius-lg);
+    border-bottom: 1px solid var(--c-glass-border);
+    padding-bottom: 30px;
+  }
+  .paper {
+    border-color: rgba(201, 151, 59, 0.4);
+  }
+  .grabber {
+    display: none;
+  }
+}
+
+.grabber {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  translate: -50% 0;
+  width: 42px;
+  height: 4px;
+  border-radius: 4px;
+  background: currentColor;
+  opacity: 0.22;
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity 200ms, background 200ms;
+}
+.close:hover {
+  opacity: 1;
+  background: rgba(127, 127, 127, 0.14);
+}
+.close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 5vw, 2.1rem);
+  line-height: var(--lh-snug);
+  margin: 4px 40px 18px 0;
+}

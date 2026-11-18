@@ -34,4 +34,12 @@ export const local = safe(() => window.localStorage)
 export const STORAGE_KEYS = {
   unlocked: 'nh:unlocked',
   introDone: 'nh:intro-done',
+  /** Quién escribe en este dispositivo ("her" | "him"). */
+  author: 'nh:author',
+  /** Hasta cuándo se vieron las notitas de la otra persona (ms). */
+  notesSeen: 'nh:notes-seen',
+  /** Cartas "Ábrela cuando…" ya abiertas (ids separados por coma). */
+  openWhen: 'nh:open-when',
+  /** Color de papel elegido la última vez. */
+  noteColor: 'nh:note-color',
 } as const

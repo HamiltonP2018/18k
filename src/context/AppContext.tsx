@@ -2,15 +2,18 @@
  * Estado global de la experiencia: candado, intro y modo inmersivo.
  */
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
-import { session, STORAGE_KEYS } from '../lib/storage'
+import { local, STORAGE_KEYS } from '../lib/storage'
 
 export interface AppContextValue {
-  /** true cuando ya se ingresó la contraseña correcta (persiste en la pestaña). */
+  /**
+   * true cuando ya se ingresó la contraseña correcta. Se recuerda en este
+   * dispositivo: al volver a abrir la página entra directo a la historia.
+   */
   unlocked: boolean
   unlock: () => void
   /** Vuelve a cerrar con candado y repite toda la experiencia. */
   lock: () => void
-  /** true cuando la intro cinematográfica ya terminó o se saltó. */
+  /** true cuando la intro cinematográfica ya terminó o se saltó (también se recuerda). */
   introDone: boolean
   finishIntro: () => void
   /** Vuelve a reproducir la intro. */
@@ -26,30 +29,30 @@ export interface AppContextValue {
 const AppContext = createContext<AppContextValue | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [unlocked, setUnlocked] = useState(() => session.get(STORAGE_KEYS.unlocked) === '1')
-  const [introDone, setIntroDone] = useState(() => session.get(STORAGE_KEYS.introDone) === '1')
+  const [unlocked, setUnlocked] = useState(() => local.get(STORAGE_KEYS.unlocked) === '1')
+  const [introDone, setIntroDone] = useState(() => local.get(STORAGE_KEYS.introDone) === '1')
   const [immersive, setImmersive] = useState(false)
 
   const unlock = useCallback(() => {
-    session.set(STORAGE_KEYS.unlocked, '1')
+    local.set(STORAGE_KEYS.unlocked, '1')
     setUnlocked(true)
   }, [])
 
   const lock = useCallback(() => {
-    session.remove(STORAGE_KEYS.unlocked)
-    session.remove(STORAGE_KEYS.introDone)
+    local.remove(STORAGE_KEYS.unlocked)
+    local.remove(STORAGE_KEYS.introDone)
     setIntroDone(false)
     setUnlocked(false)
     window.scrollTo(0, 0)
   }, [])
 
   const finishIntro = useCallback(() => {
-    session.set(STORAGE_KEYS.introDone, '1')
+    local.set(STORAGE_KEYS.introDone, '1')
     setIntroDone(true)
   }, [])
 
   const replayIntro = useCallback(() => {
-    session.remove(STORAGE_KEYS.introDone)
+    local.remove(STORAGE_KEYS.introDone)
     setIntroDone(false)
     window.scrollTo(0, 0)
   }, [])

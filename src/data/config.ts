@@ -35,6 +35,15 @@ export const config = {
   },
 
   siteTitle: 'Nuestra Historia',
+
+  /** Notitas compartidas (sección "Nuestro rincón"). */
+  notes: {
+    /**
+     * Cómo aparecen las notitas de él (para ella). La página nunca muestra su
+     * nombre: si quieres, cámbialo por un apodo.
+     */
+    hisLabel: 'Tu amor',
+  },
 } as const
 
 export type AppConfig = typeof config

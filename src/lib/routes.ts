@@ -7,6 +7,7 @@ export const ROUTES = {
   gallery: '/recuerdos',
   moments: '/momentos',
   letter: '/carta',
+  notes: '/notas',
 } as const
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES]
@@ -20,8 +21,10 @@ export const SECTIONS = {
   moments: 'momentos',
   reasons: 'razones',
   letter: 'carta',
+  openWhen: 'abrela',
   promises: 'promesas',
   finale: 'final',
+  corner: 'rincon',
 } as const
 
 export type SectionId = (typeof SECTIONS)[keyof typeof SECTIONS]
