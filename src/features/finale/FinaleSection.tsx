@@ -1,6 +1,7 @@
 /**
- * Final: un corazón hecho con nuestras fotos que late suave, el "te amo" y
- * la firma. Cada foto del corazón se puede abrir en el visor.
+ * Final: un corazón hecho con nuestras fotos que late suave, el "te amo",
+ * la firma y el mensaje de voz de él. Cada foto del corazón se puede abrir
+ * en el visor.
  */
 import { useMemo, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
@@ -13,6 +14,7 @@ import { Button } from '../../components/Button'
 import { Reveal } from '../../components/Reveal'
 import { Ornament } from '../../components/Ornament'
 import { MediaLightbox } from '../../components/MediaLightbox'
+import { VoiceNote } from './VoiceNote'
 import { getMany } from '../../lib/media'
 import { burstParticles, heartBurst } from '../../lib/confetti'
 import { SECTIONS } from '../../lib/routes'
@@ -102,6 +104,10 @@ export function FinaleSection() {
             Esta historia apenas empieza, {config.herName}.
           </p>
           <p className={styles.signature}>{config.signature}</p>
+        </Reveal>
+
+        <Reveal className={styles.voice} y={24} amount={0.5}>
+          <VoiceNote />
         </Reveal>
 
         <Reveal className={styles.actions} y={20} blur={false} delay={0.1}>

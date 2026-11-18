@@ -34,6 +34,18 @@ export const config = {
     volume: 0.6,
   },
 
+  /**
+   * Mensaje de voz de él (al final de la página). Archivos dentro de `public/`:
+   * `src` en m4a (se oye en todos lados, también en iPhone) y `fallback` en ogg.
+   * Con `src` vacío no se muestra.
+   */
+  voiceNote: {
+    src: 'audio/mensaje-de-h.m4a',
+    fallback: 'audio/mensaje-de-h.ogg',
+    title: 'Escúchame, mocosa',
+    caption: 'Un mensaje de H',
+  },
+
   siteTitle: 'Nuestra Historia',
 
   /** Notitas compartidas (sección "Nuestro rincón"). */

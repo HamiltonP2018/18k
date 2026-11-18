@@ -1,0 +1,122 @@
+.card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 16px;
+  width: min(100%, 420px);
+  padding: 16px 20px 16px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--c-glass);
+  border: 1px solid var(--c-line-gold);
+  box-shadow: var(--inset-glass), var(--shadow-card);
+  text-align: left;
+  transition: box-shadow 400ms var(--ease-out);
+}
+.playing {
+  box-shadow: var(--inset-glass), var(--shadow-card), var(--glow-gold);
+}
+
+.play {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--grad-gold);
+  color: var(--c-bg);
+  box-shadow: var(--glow-gold);
+  transition: transform 200ms var(--ease-out);
+}
+.play svg {
+  width: 24px;
+  height: 24px;
+}
+/* El triángulo de "play" se ve centrado si se corre un poquito a la derecha. */
+.card:not(.playing) .play svg {
+  margin-left: 3px;
+}
+.play:active {
+  transform: scale(0.94);
+}
+.playing .play::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid var(--c-gold);
+  animation: ring 1.6s var(--ease-out) infinite;
+}
+@keyframes ring {
+  from {
+    opacity: 0.8;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+.body {
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--c-text-strong);
+}
+
+.wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 30px;
+  margin: 8px 0 6px;
+}
+.bar {
+  flex: 1;
+  height: calc(var(--h) * 100%);
+  min-height: 3px;
+  border-radius: 2px;
+  background: var(--c-line-strong);
+  transform-origin: center;
+  transition: background 250ms linear;
+}
+.done {
+  background: var(--c-gold);
+}
+.playing .bar {
+  animation: wave 1.1s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--i) * -73ms);
+}
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+.time {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playing .bar,
+  .playing .play::after {
+    animation: none;
+  }
+}

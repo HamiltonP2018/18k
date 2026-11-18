@@ -113,6 +113,12 @@
   transform: rotate(-4deg);
 }
 
+.voice {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
