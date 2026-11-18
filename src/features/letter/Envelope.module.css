@@ -1,0 +1,153 @@
+.envelope {
+  --w: min(86vw, 420px);
+  --paper: #f7e9dc;
+  --paper-dark: #ecd5c3;
+  --edge: rgba(201, 151, 59, 0.55);
+  position: relative;
+  width: var(--w);
+  aspect-ratio: 1.45;
+  perspective: 1200px;
+  filter: drop-shadow(0 40px 50px rgba(0, 0, 0, 0.6));
+}
+
+.back,
+.pocket,
+.flap,
+.letter {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+/* Interior del sobre */
+.back {
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #d9b9a3 0%, #c9a28a 100%);
+}
+
+/* La carta */
+.letter {
+  left: 6%;
+  right: 6%;
+  bottom: 6%;
+  height: 86%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8%;
+  padding: 10% 9% 0;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 22px, rgba(58, 34, 48, 0.035) 22px 23px),
+    linear-gradient(180deg, #fffaf2, #fbf1e3);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(0);
+  transition: transform 1s var(--ease-out) 0.45s;
+}
+.peek {
+  font-family: var(--font-script);
+  font-size: calc(var(--w) * 0.085);
+  line-height: 1.1;
+  color: #8f2a44;
+  white-space: nowrap;
+}
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.lines i {
+  display: block;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(58, 34, 48, 0.14);
+}
+.lines i:nth-child(2) {
+  width: 86%;
+}
+.lines i:nth-child(3) {
+  width: 92%;
+}
+.lines i:nth-child(4) {
+  width: 60%;
+}
+
+/* Bolsillo frontal (con la V) */
+.pocket {
+  inset: 0;
+  z-index: 2;
+  border-radius: 10px;
+  background:
+    linear-gradient(115deg, transparent 49.7%, rgba(160, 110, 80, 0.18) 50%, transparent 50.6%),
+    linear-gradient(-115deg, transparent 49.7%, rgba(160, 110, 80, 0.18) 50%, transparent 50.6%),
+    linear-gradient(180deg, #f9ede2 0%, var(--paper) 60%, var(--paper-dark) 100%);
+  clip-path: polygon(0 18%, 50% 62%, 100% 18%, 100% 100%, 0 100%);
+  box-shadow: inset 0 0 0 1px var(--edge);
+}
+
+/* Solapa superior */
+.flap {
+  top: 0;
+  height: 64%;
+  z-index: 3;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, #fbefe4 0%, var(--paper-dark) 100%);
+  border-radius: 10px 10px 0 0;
+  transition:
+    transform 0.8s var(--ease-in-out),
+    z-index 0s linear 0.4s;
+}
+
+/* Sello de cera */
+.seal {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 64%;
+  width: calc(var(--w) * 0.17);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #e0405f 0%, #a3122f 55%, #6e0a1f 100%);
+  box-shadow:
+    0 6px 14px rgba(70, 5, 20, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.25),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.5s var(--ease-out),
+    opacity 0.4s var(--ease-out);
+}
+.seal::before {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 220, 160, 0.45);
+}
+.sealHeart {
+  width: 42%;
+  height: 42%;
+  color: #ffd98a;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+}
+
+/* ---- Abierto ---- */
+.open .seal {
+  transform: scale(0.4) rotate(-20deg);
+  opacity: 0;
+}
+.open .flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+.open .letter {
+  transform: translateY(-46%);
+}

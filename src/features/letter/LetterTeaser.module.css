@@ -1,0 +1,40 @@
+.section {
+  overflow: hidden;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
+  text-align: center;
+}
+
+.envelopeLink {
+  display: block;
+  border-radius: 12px;
+  animation: float 6s var(--ease-in-out) infinite;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+.envelope {
+  --w: min(78vw, 380px);
+}
+
+.excerpt {
+  max-width: 34ch;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-lead);
+  line-height: 1.45;
+  color: var(--c-text-muted);
+  text-wrap: balance;
+}

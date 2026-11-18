@@ -1,0 +1,129 @@
+/* ==========================================================================
+   Design tokens — "Nuestra Historia"
+   Dirección: romance cinematográfico nocturno. Fondo negro ciruela/vino,
+   oro champagne y rosa (heredados de la versión original, refinados),
+   brillos suaves en lugar de neón duro, grano de película y mucho aire.
+   ========================================================================== */
+:root {
+  /* ---- Fondo ---- */
+  --c-bg: #07020a;
+  --c-bg-2: #10050d;
+  --c-bg-3: #1a0915;
+  --c-wine: #3a0e23;
+  --c-plum: #24102b;
+
+  /* ---- Acentos ---- */
+  --c-rose: #ff7a93;
+  --c-rose-strong: #ff4f74;
+  --c-rose-soft: #ffb3c1;
+  --c-blush: #ffe1e8;
+  --c-gold: #f3c969;
+  --c-gold-bright: #ffe08a;
+  --c-gold-deep: #c9973b;
+  --c-gold-pale: #fff1c9;
+  --c-error: #ff5a5f;
+
+  /* ---- Texto ---- */
+  --c-text: #fbeff2;
+  --c-text-strong: #fff8f0;
+  --c-text-muted: rgba(251, 239, 242, 0.7);
+  --c-text-faint: rgba(251, 239, 242, 0.46);
+
+  /* ---- Superficies ---- */
+  --c-line: rgba(255, 179, 193, 0.16);
+  --c-line-strong: rgba(255, 179, 193, 0.32);
+  --c-line-gold: rgba(243, 201, 105, 0.38);
+  --c-glass: rgba(30, 11, 22, 0.52);
+  --c-glass-strong: rgba(22, 7, 16, 0.8);
+  --c-glass-border: rgba(255, 196, 210, 0.2);
+  --c-overlay: rgba(5, 1, 6, 0.72);
+  --c-paper: #fbf3e6;
+  --c-paper-ink: #3a2230;
+
+  /* ---- Degradados ---- */
+  --grad-gold: linear-gradient(120deg, #fff1c9 0%, #f3c969 38%, #e2a24c 62%, #fff1c9 100%);
+  --grad-romance: linear-gradient(115deg, #f3c969 0%, #ffc9a8 45%, #ff7a93 100%);
+  --grad-text: linear-gradient(100deg, #fff4d6 0%, #f3c969 32%, #ffb3c1 68%, #ff7a93 100%);
+  --grad-rose: linear-gradient(135deg, #ff9aae 0%, #ff4f74 100%);
+  --grad-scrim-bottom: linear-gradient(to top, rgba(7, 2, 10, 0.95) 0%, rgba(7, 2, 10, 0.55) 40%, rgba(7, 2, 10, 0) 100%);
+  --grad-scrim-full: radial-gradient(120% 90% at 50% 40%, rgba(7, 2, 10, 0.25) 0%, rgba(7, 2, 10, 0.78) 70%, rgba(7, 2, 10, 0.95) 100%);
+
+  /* ---- Brillos y sombras ---- */
+  --glow-rose: 0 0 24px rgba(255, 122, 147, 0.32), 0 0 64px rgba(255, 122, 147, 0.14);
+  --glow-gold: 0 0 20px rgba(243, 201, 105, 0.34), 0 0 56px rgba(243, 201, 105, 0.14);
+  --glow-text-gold: 0 0 18px rgba(243, 201, 105, 0.45);
+  --glow-text-rose: 0 0 18px rgba(255, 122, 147, 0.5);
+  --shadow-card: 0 30px 60px -24px rgba(0, 0, 0, 0.7), 0 14px 28px -14px rgba(0, 0, 0, 0.55);
+  --shadow-photo: 0 24px 50px -18px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --inset-glass: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 196, 210, 0.06);
+
+  /* ---- Tipografía ---- */
+  --font-display: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-script: 'Alex Brush', 'Segoe Script', cursive;
+  --font-caps: 'Cinzel Variable', 'Cinzel', Georgia, serif;
+  --font-body: 'Montserrat Variable', 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --fs-hero: clamp(3.1rem, 12vw, 9rem);
+  --fs-h1: clamp(2.5rem, 7.5vw, 5.25rem);
+  --fs-h2: clamp(2.1rem, 6vw, 4rem);
+  --fs-h3: clamp(1.45rem, 3.4vw, 2.1rem);
+  --fs-script-xl: clamp(3.4rem, 13vw, 8rem);
+  --fs-script: clamp(2.3rem, 7.5vw, 4.25rem);
+  --fs-lead: clamp(1.15rem, 1.4vw + 0.8rem, 1.5rem);
+  --fs-body: clamp(1rem, 0.35vw + 0.92rem, 1.125rem);
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.72rem;
+
+  --lh-tight: 1.05;
+  --lh-snug: 1.25;
+  --lh-body: 1.7;
+  --tracking-caps: 0.32em;
+
+  /* ---- Espaciado y layout ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  --gutter: clamp(16px, 5vw, 48px);
+  --maxw: 1180px;
+  --maxw-text: 680px;
+  --section-pad: clamp(88px, 14vh, 168px);
+
+  --radius-sm: 10px;
+  --radius: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  /* ---- Movimiento ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 180ms;
+  --dur: 420ms;
+  --dur-slow: 900ms;
+
+  /* ---- Capas ---- */
+  --z-bg: 0;
+  --z-content: 10;
+  --z-grain: 40;
+  --z-dock: 60;
+  --z-chrome: 70;
+  --z-overlay: 80;
+  --z-modal: 100;
+  --z-toast: 120;
+
+  /* ---- Áreas seguras (notch) ---- */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* Alto del dock inferior (para dejar espacio al final de las páginas) */
+  --dock-h: 64px;
+}

@@ -1,0 +1,43 @@
+.frame {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--c-bg-3);
+  isolation: isolate;
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+}
+
+.lqip,
+.img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lqip {
+  filter: blur(18px) saturate(1.2);
+  transform: scale(1.12);
+}
+
+.img {
+  opacity: 0;
+  transition:
+    opacity 900ms var(--ease-out),
+    filter 900ms var(--ease-out);
+  filter: blur(6px);
+}
+
+.loaded {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.missing {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 122, 147, 0.18), transparent 60%),
+    var(--c-bg-3);
+}

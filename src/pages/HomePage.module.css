@@ -1,0 +1,7 @@
+.home {
+  position: relative;
+  z-index: var(--z-content);
+  /* espacio para que el dock no tape el final */
+  padding-bottom: calc(var(--dock-h) + var(--safe-bottom) + 28px);
+  overflow-x: clip;
+}

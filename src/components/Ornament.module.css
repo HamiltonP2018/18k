@@ -1,0 +1,45 @@
+.ornament {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--c-gold);
+}
+
+.line {
+  display: block;
+  width: clamp(40px, 9vw, 84px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c-gold));
+  opacity: 0.8;
+}
+
+.flip {
+  transform: scaleX(-1);
+}
+
+.heart {
+  width: 14px;
+  height: 14px;
+  color: var(--c-rose);
+  filter: drop-shadow(0 0 8px rgba(255, 122, 147, 0.8));
+  animation: beat 2.4s var(--ease-in-out) infinite;
+}
+
+@keyframes beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  12% {
+    transform: scale(1.25);
+  }
+  24% {
+    transform: scale(1);
+  }
+  36% {
+    transform: scale(1.18);
+  }
+  48% {
+    transform: scale(1);
+  }
+}

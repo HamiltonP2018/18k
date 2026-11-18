@@ -1,0 +1,262 @@
+.section {
+  overflow: hidden;
+}
+
+.deckWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.deck {
+  position: relative;
+  width: min(100%, 380px);
+  aspect-ratio: 4 / 5;
+  max-height: 62vh;
+  display: grid;
+}
+
+.card {
+  grid-area: 1 / 1;
+  position: relative;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(255, 241, 201, 0.75), transparent 55%),
+    linear-gradient(160deg, #fff6e8 0%, #fbe9e4 55%, #f6d8dc 100%);
+  box-shadow:
+    0 40px 70px -30px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+}
+
+.back {
+  pointer-events: none;
+  opacity: 0.7;
+}
+.back1 {
+  transform: rotate(-5deg) translateY(10px) scale(0.97);
+  filter: brightness(0.75);
+}
+.back2 {
+  transform: rotate(6deg) translateY(18px) scale(0.94);
+  filter: brightness(0.55);
+}
+
+.front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: clamp(28px, 8vw, 44px);
+  text-align: center;
+  color: var(--c-paper-ink);
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.front:active {
+  cursor: grabbing;
+}
+/* Marco interior dorado */
+.front::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: calc(var(--radius-lg) - 8px);
+  border: 1px solid rgba(201, 151, 59, 0.45);
+  pointer-events: none;
+}
+
+.number {
+  position: absolute;
+  top: 26px;
+  left: 0;
+  right: 0;
+  font-family: var(--font-caps);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  color: var(--c-gold-deep);
+}
+
+.photo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fff;
+  box-shadow: 0 10px 22px -10px rgba(58, 34, 48, 0.6);
+}
+
+.text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.6rem, 6.6vw, 2.1rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.cornerHeart {
+  position: absolute;
+  bottom: 26px;
+  width: 18px;
+  height: 18px;
+  color: var(--c-rose-strong);
+  opacity: 0.85;
+}
+
+.tip {
+  position: absolute;
+  bottom: 54px;
+  font-family: var(--font-caps);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(58, 34, 48, 0.55);
+  animation: tip-nudge 2.4s var(--ease-in-out) infinite;
+}
+@keyframes tip-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+}
+
+/* ---- Carta final ---- */
+.final {
+  cursor: default;
+  background:
+    radial-gradient(90% 70% at 50% 30%, rgba(255, 122, 147, 0.35), transparent 70%),
+    linear-gradient(160deg, #2a0d1e 0%, #1a0915 100%);
+  color: var(--c-text-strong);
+  box-shadow:
+    0 40px 70px -30px rgba(0, 0, 0, 0.85),
+    0 0 0 1px var(--c-line-gold) inset,
+    var(--glow-rose);
+}
+.final::before {
+  border-color: rgba(243, 201, 105, 0.35);
+}
+.bigHeart {
+  width: 56px;
+  height: 56px;
+  color: var(--c-rose);
+  filter: drop-shadow(0 0 18px rgba(255, 122, 147, 0.8));
+  animation: big-beat 1.6s var(--ease-in-out) infinite;
+}
+@keyframes big-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.18);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.1);
+  }
+}
+.finalText {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.7rem, 6.6vw, 2.2rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.finalSub {
+  font-family: var(--font-script);
+  font-size: clamp(1.9rem, 7vw, 2.5rem);
+  line-height: 1.2;
+  color: var(--c-gold-bright);
+  text-shadow: var(--glow-text-gold);
+}
+.restart {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-caps);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-gold-pale);
+  border: 1px solid var(--c-line-gold);
+}
+.restart svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---- Controles ---- */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: min(100%, 380px);
+  margin-top: 34px;
+}
+.arrow {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: var(--c-gold-pale);
+  border: 1px solid var(--c-glass-border);
+  background: var(--c-glass);
+  transition:
+    opacity 250ms var(--ease-out),
+    border-color 250ms var(--ease-out);
+}
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+@media (hover: hover) {
+  .arrow:not(:disabled):hover {
+    border-color: var(--c-line-gold);
+  }
+}
+.arrow svg {
+  width: 22px;
+  height: 22px;
+}
+.progress {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.progressText {
+  font-family: var(--font-caps);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--c-text-muted);
+}
+.progressTrack {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(255, 179, 193, 0.14);
+}
+.progressFill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  background: var(--grad-romance);
+}

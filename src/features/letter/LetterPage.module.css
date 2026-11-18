@@ -1,0 +1,160 @@
+.page {
+  position: relative;
+  z-index: var(--z-content);
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  padding: calc(var(--safe-top) + 84px) 16px calc(var(--safe-bottom) + var(--dock-h) + 40px);
+}
+
+/* ---- Sobre ---- */
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  min-height: calc(100svh - 220px);
+}
+.eyebrow {
+  font-size: 0.8rem;
+}
+.envelopeBtn {
+  display: block;
+  border-radius: 12px;
+}
+.tapHint {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--c-text-muted);
+  animation: hint-pulse 2.4s var(--ease-in-out) infinite;
+}
+@keyframes hint-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---- Papel ---- */
+.paper {
+  position: relative;
+  width: min(100%, 720px);
+  align-self: flex-start;
+  padding: clamp(36px, 8vw, 72px) clamp(24px, 7vw, 72px) clamp(40px, 8vw, 64px);
+  border-radius: 6px;
+  color: var(--c-paper-ink);
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(255, 255, 255, 0.7), transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0 34px, rgba(58, 34, 48, 0.035) 34px 35px),
+    linear-gradient(180deg, #fffaf2 0%, #fbf1e3 70%, #f6e6d3 100%);
+  box-shadow:
+    0 50px 90px -40px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+    0 0 60px rgba(255, 122, 147, 0.12);
+}
+/* Borde dorado fino */
+.paper::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(201, 151, 59, 0.35);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.date {
+  margin-bottom: 26px;
+  text-align: right;
+  font-family: var(--font-caps);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-gold-deep);
+}
+
+.greeting {
+  margin-bottom: 22px;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 9vw, 3.4rem);
+  line-height: 1.15;
+  color: #8f2a44;
+}
+
+.paragraph {
+  margin-bottom: 1.15em;
+  font-family: var(--font-display);
+  font-size: clamp(1.18rem, 1.2vw + 0.95rem, 1.42rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+  hyphens: auto;
+}
+
+.word {
+  display: inline-block;
+  white-space: pre;
+}
+
+.signature {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: 30px;
+}
+.signLabel {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: rgba(58, 34, 48, 0.75);
+}
+.signName {
+  font-family: var(--font-script);
+  font-size: clamp(3rem, 12vw, 4.4rem);
+  line-height: 1.1;
+  color: #8f2a44;
+  transform: rotate(-4deg);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+/* Botón "Mostrar todo" */
+.skip {
+  position: fixed;
+  z-index: var(--z-chrome);
+  left: 50%;
+  bottom: calc(var(--safe-bottom) + 18px);
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-caps);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-gold-pale);
+  background: var(--c-glass-strong);
+  border: 1px solid var(--c-line-gold);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.skip svg {
+  width: 15px;
+  height: 15px;
+}

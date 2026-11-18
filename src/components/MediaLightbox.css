@@ -1,0 +1,78 @@
+/* Tema del visor (yet-another-react-lightbox) */
+.nh-lightbox {
+  --yarl__color_backdrop: rgba(6, 1, 7, 0.94);
+  --yarl__color_button: rgba(255, 241, 201, 0.85);
+  --yarl__color_button_active: #ffe08a;
+  --yarl__color_button_disabled: rgba(255, 255, 255, 0.3);
+  --yarl__slide_title_color: #ffe08a;
+  --yarl__slide_title_font_size: clamp(1.6rem, 5vw, 2.4rem);
+  --yarl__slide_title_font_weight: 400;
+  --yarl__slide_description_color: rgba(251, 239, 242, 0.72);
+  --yarl__slide_captions_container_background: linear-gradient(to top, rgba(6, 1, 7, 0.9), rgba(6, 1, 7, 0.55) 60%, transparent);
+  --yarl__slide_captions_container_padding: 28px 20px 52px;
+  --yarl__counter_color: rgba(255, 241, 201, 0.7);
+  --yarl__counter_filter: none;
+  --yarl__counter_margin: 14px;
+  --yarl__button_filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.6));
+}
+
+.nh-lightbox .yarl__container {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.nh-lightbox .yarl__slide_title {
+  font-family: var(--font-script);
+  text-align: center;
+  width: 100%;
+  text-shadow: 0 0 18px rgba(243, 201, 105, 0.55);
+  line-height: 1.15;
+}
+
+.nh-lightbox .yarl__slide_description {
+  font-family: var(--font-caps);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.nh-lightbox .yarl__counter {
+  font-family: var(--font-caps);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  padding-bottom: calc(var(--safe-bottom) + 4px);
+}
+
+.nh-lightbox .yarl__toolbar {
+  padding-top: calc(var(--safe-top) + 8px);
+}
+
+.nh-lightbox .yarl__slide_image {
+  border-radius: 6px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.nh-lightbox video {
+  border-radius: 10px;
+  background: #000;
+}
+
+/* Leyenda abajo y centrada (arriba chocaba con los botones de zoom/cerrar). */
+.nh-lightbox .yarl__slide_title_container {
+  top: auto;
+  bottom: 0;
+  padding: 0 20px calc(var(--safe-bottom) + 82px);
+  background: none;
+  pointer-events: none;
+  z-index: 1;
+}
+.nh-lightbox .yarl__slide_title {
+  max-width: 100%;
+  white-space: normal;
+  text-wrap: balance;
+}
+.nh-lightbox .yarl__slide_description_container {
+  padding-bottom: calc(var(--safe-bottom) + 50px);
+  background: linear-gradient(to top, rgba(6, 1, 7, 0.92), rgba(6, 1, 7, 0.6) 60%, transparent);
+  padding-top: 110px;
+}

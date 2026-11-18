@@ -1,0 +1,201 @@
+.page {
+  position: relative;
+  z-index: var(--z-content);
+  min-height: 100svh;
+  padding-bottom: calc(var(--dock-h) + var(--safe-bottom) + 48px);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: calc(var(--safe-top) + 86px);
+  padding-bottom: 26px;
+  text-align: center;
+}
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  filter: drop-shadow(0 0 22px rgba(243, 201, 105, 0.2));
+}
+.lead {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-lead);
+  color: var(--c-text-muted);
+}
+
+/* ---- Filtros (fijos arriba al hacer scroll) ---- */
+.chipsBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin-bottom: 18px;
+  padding: calc(var(--safe-top) + 10px) 0 12px;
+  background: linear-gradient(to bottom, rgba(7, 2, 10, 0.92) 0%, rgba(7, 2, 10, 0.75) 70%, transparent 100%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* deja libres el botón volver y el de música */
+  padding-inline: max(var(--gutter), calc(var(--safe-left) + 70px)) max(var(--gutter), calc(var(--safe-right) + 70px));
+}
+@media (min-width: 1000px) {
+  .chips {
+    justify-content: center;
+  }
+}
+.chips::-webkit-scrollbar {
+  display: none;
+}
+.chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--c-text-muted);
+  border: 1px solid var(--c-glass-border);
+  background: var(--c-glass);
+  transition:
+    color 250ms var(--ease-out),
+    border-color 250ms var(--ease-out),
+    background-color 250ms var(--ease-out);
+}
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--c-text-strong);
+    border-color: var(--c-line-strong);
+  }
+}
+.chipActive {
+  color: #2a0d1a;
+  border-color: transparent;
+  background: var(--grad-romance);
+  box-shadow: 0 6px 20px -8px rgba(255, 122, 147, 0.7);
+}
+@media (hover: hover) {
+  .chipActive:hover {
+    color: #2a0d1a;
+  }
+}
+.chipHeart {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+.chipCount {
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0.65;
+}
+
+/* ---- Grupos ---- */
+.group + .group {
+  margin-top: clamp(56px, 10vh, 96px);
+}
+.groupHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+  text-align: center;
+}
+.groupTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: var(--lh-snug);
+  color: var(--c-text-strong);
+}
+.groupDesc {
+  max-width: 44ch;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--c-text-muted);
+}
+.groupCount {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--c-text-faint);
+}
+
+/* ---- Masonry ---- */
+.masonry {
+  columns: 2;
+  column-gap: 10px;
+}
+@media (min-width: 700px) {
+  .masonry {
+    columns: 3;
+    column-gap: 14px;
+  }
+}
+@media (min-width: 1100px) {
+  .masonry {
+    columns: 4;
+  }
+}
+
+.tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  break-inside: avoid;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-photo);
+  cursor: zoom-in;
+  isolation: isolate;
+}
+@media (min-width: 700px) {
+  .tile {
+    margin-bottom: 14px;
+  }
+}
+.tile > :first-child {
+  transition: transform 800ms var(--ease-out);
+}
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 36px 14px 12px;
+  font-family: var(--font-script);
+  font-size: 1.45rem;
+  line-height: 1.1;
+  text-align: left;
+  color: var(--c-gold-pale);
+  text-shadow: 0 0 12px rgba(243, 201, 105, 0.45);
+  background: linear-gradient(to top, rgba(7, 2, 10, 0.88), transparent);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 400ms var(--ease-out),
+    transform 400ms var(--ease-out);
+}
+@media (hover: hover) {
+  .tile:hover > :first-child {
+    transform: scale(1.05);
+  }
+  .tile:hover .caption,
+  .tile:focus-visible .caption {
+    opacity: 1;
+    transform: none;
+  }
+}
