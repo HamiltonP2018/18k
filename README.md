@@ -22,6 +22,10 @@ contraseña (nuestra fecha) y hecha en **React + TypeScript + Vite**.
 6. **Notitas** (`#/notas`): muro compartido de notitas y dibujitos en tiempo
    real, con «está escribiendo…», corazones y notificaciones push. Necesita el
    servidor de `notes-worker/` (ver más abajo); sin él, la sección no aparece.
+   Los dibujos se hacen en un lienzo a pantalla completa pensado para el
+   celular (`src/features/notes/draw/`): zoom con dos dedos, 8 pinceles,
+   borrador, balde, gotero, paleta de 56 colores y mezclador, deshacer con dos
+   dedos y rehacer con tres. El dibujo a medio hacer se guarda en el celular.
 
 El candado y la intro se recuerdan en cada dispositivo: la segunda vez entra
 directo a la historia (el botón «volver a empezar» del final los repite).

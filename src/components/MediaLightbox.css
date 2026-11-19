@@ -76,3 +76,10 @@
   background: linear-gradient(to top, rgba(6, 1, 7, 0.92), rgba(6, 1, 7, 0.6) 60%, transparent);
   padding-top: 110px;
 }
+
+/* Dibujos de las notitas: fondo transparente sobre el color de su papel. */
+.nh-drawing .yarl__slide_image {
+  background-color: var(--yarl__nh_paper, #fbf3e6);
+  background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 45%);
+  border-radius: 4px;
+}

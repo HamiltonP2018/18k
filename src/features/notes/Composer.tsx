@@ -1,8 +1,12 @@
 /**
  * Editor de notitas (hoja modal) con dos pestañas: Escribir y Dibujar.
- * El borrador (texto y trazos) se conserva si se cierra sin enviar.
+ * - Dibujar abre el lienzo a pantalla completa (draw/DrawingStudio); al volver
+ *   queda la miniatura, la dedicatoria y el botón Enviar.
+ * - El borrador (texto y dibujo) se conserva si se cierra sin enviar; el
+ *   dibujo, incluso si se cierra la app.
+ * - El botón "atrás" del celular cierra el lienzo (no se sale de la página).
  */
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Brush, Loader2, PenLine, SendHorizontal } from 'lucide-react'
 import { Sheet } from '../../components/Sheet'
 import { Button } from '../../components/Button'
@@ -10,8 +14,10 @@ import { heartBurst } from '../../lib/confetti'
 import { local, STORAGE_KEYS } from '../../lib/storage'
 import { cx } from '../../lib/cx'
 import { useNotes } from './NotesContext'
-import { DrawingPad, type DrawingPadHandle } from './DrawingPad'
-import { StrokeStore } from './strokes'
+import { DrawingDoc } from './draw/doc'
+import { DrawingStudio } from './draw/DrawingStudio'
+import { DrawingThumb } from './draw/DrawingThumb'
+import { exportDrawing } from './draw/render'
 import { PAPER } from './colors'
 import { LIMITS, NOTE_COLORS, type NoteColor } from './protocol'
 import styles from './Composer.module.css'
@@ -35,11 +41,12 @@ export function Composer({ open, tab, onTab, onClose }: ComposerProps) {
   const [color, setColorState] = useState<NoteColor>(savedColor)
   const [text, setText] = useState('')
   const [caption, setCaption] = useState('')
-  const [hasInk, setHasInk] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [store] = useState(() => new StrokeStore())
-  const pad = useRef<DrawingPadHandle | null>(null)
+  const [doc] = useState(() => DrawingDoc.fromDraft())
+  const version = useSyncExternalStore(doc.subscribe, doc.getVersion)
+  const hasInk = doc.hasInk
+  const [studio, setStudio] = useState(false)
 
   const setColor = (c: NoteColor) => {
     setColorState(c)
@@ -49,6 +56,58 @@ export function Composer({ open, tab, onTab, onClose }: ComposerProps) {
   useEffect(() => {
     if (!open) setActivity(null)
   }, [open, setActivity])
+
+  // Lienzo con su propia entrada en el historial: "atrás" lo cierra.
+  const openStudio = useCallback(() => {
+    try {
+      const state: unknown = window.history.state
+      window.history.pushState({ ...(typeof state === 'object' && state ? state : {}), nhStudio: true }, '')
+    } catch {
+      /* sin historial: se cierra con "Listo" */
+    }
+    setStudio(true)
+  }, [])
+  const closeStudio = useCallback(() => {
+    setActivity(null)
+    if ((window.history.state as { nhStudio?: boolean } | null)?.nhStudio) window.history.back()
+    else setStudio(false)
+  }, [setActivity])
+  useEffect(() => {
+    const onPop = () => {
+      if (!(window.history.state as { nhStudio?: boolean } | null)?.nhStudio) setStudio(false)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+
+  // Al entrar a "Dibujar" sin nada dibujado, el lienzo se abre solo.
+  const autoOpened = useRef(false)
+  useEffect(() => {
+    if (!open || tab !== 'draw') {
+      autoOpened.current = false
+      return
+    }
+    if (!autoOpened.current && !doc.hasInk) {
+      autoOpened.current = true
+      openStudio()
+    }
+  }, [open, tab, doc, openStudio])
+
+  // Guarda el dibujo en el celular (por si se cierra la app sin enviarlo).
+  useEffect(() => {
+    const t = window.setTimeout(() => doc.saveDraft(), 400)
+    return () => window.clearTimeout(t)
+  }, [doc, version])
+  useEffect(() => {
+    const save = () => doc.saveDraft()
+    const onVis = () => document.visibilityState === 'hidden' && save()
+    window.addEventListener('pagehide', save)
+    document.addEventListener('visibilitychange', onVis)
+    return () => {
+      window.removeEventListener('pagehide', save)
+      document.removeEventListener('visibilitychange', onVis)
+    }
+  }, [doc])
 
   const close = () => {
     setActivity(null)
@@ -68,12 +127,13 @@ export function Composer({ open, tab, onTab, onClose }: ComposerProps) {
         await send({ kind: 'text', text: text.trim(), color })
         setText('')
       } else {
-        const image = pad.current?.exportImage()
-        if (!image) throw new Error('Dibuja algo primero ✍️')
+        if (!doc.hasInk) throw new Error('Dibuja algo primero ✍️')
+        const image = exportDrawing(doc.all, PAPER[color].bg, LIMITS.imageDataUrl)
+        if (!image) throw new Error('No se pudo preparar el dibujo')
         await send({ kind: 'drawing', text: caption.trim(), color, image })
-        store.clear()
+        doc.reset()
+        doc.saveDraft()
         setCaption('')
-        setHasInk(false)
       }
       setActivity(null)
       heartBurst({ y: 0.75, count: 50, power: 0.6 })
@@ -86,6 +146,7 @@ export function Composer({ open, tab, onTab, onClose }: ComposerProps) {
   }
 
   return (
+    <>
     <Sheet open={open} onClose={close} title={tab === 'text' ? 'Escríbele una notita' : 'Hazle un dibujito'} className={styles.sheet}>
       <div className={styles.tabs} role="tablist" aria-label="Tipo de notita">
         <button type="button" role="tab" aria-selected={tab === 'text'} className={cx(styles.tab, tab === 'text' && styles.tabOn)} onClick={() => onTab('text')}>
@@ -133,7 +194,7 @@ export function Composer({ open, tab, onTab, onClose }: ComposerProps) {
         </div>
       ) : (
         <div className={styles.draw}>
-          <DrawingPad ref={pad} store={store} paper={PAPER[color].bg} onChange={setHasInk} onActivity={() => setActivity('drawing')} />
+          <DrawingThumb doc={doc} paper={PAPER[color].bg} onOpen={openStudio} paused={studio} />
           <input
             className={styles.caption}
             value={caption}
@@ -164,5 +225,15 @@ export function Composer({ open, tab, onTab, onClose }: ComposerProps) {
         {sending ? 'Enviando…' : 'Enviar'}
       </Button>
     </Sheet>
+
+    <DrawingStudio
+      open={open && studio}
+      doc={doc}
+      paper={color}
+      onPaper={setColor}
+      onClose={closeStudio}
+      onActivity={() => setActivity('drawing')}
+    />
+    </>
   )
 }

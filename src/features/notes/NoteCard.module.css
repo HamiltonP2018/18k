@@ -65,7 +65,36 @@
   text-align: center;
 }
 
+.drawingWrap {
+  position: relative;
+}
+
+.expand {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--c-paper-ink);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 2px 8px rgba(58, 34, 48, 0.25);
+  opacity: 0.8;
+  transition: opacity 200ms, transform 200ms var(--ease-out);
+}
+.expand:hover {
+  opacity: 1;
+  transform: scale(1.06);
+}
+.expand svg {
+  width: 15px;
+  height: 15px;
+}
+
 .drawing {
+  display: block;
   width: 100%;
   max-width: 100%;
   height: auto;

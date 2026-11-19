@@ -4,11 +4,12 @@
  */
 import { memo, useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { Heart, Trash2 } from 'lucide-react'
+import { Heart, Maximize2, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { authorLabel, imageSrc } from './config'
 import { PAPER } from './colors'
+import { DrawingViewer } from './draw/DrawingViewer'
 import type { LocalNote } from './NotesContext'
 import type { Author } from './protocol'
 import { cx } from '../../lib/cx'
@@ -44,6 +45,7 @@ export const NoteCard = memo(function NoteCard({ note, me, onHeart, onDelete, co
   const reduced = useReducedMotion()
   const mine = note.author === me
   const [confirm, setConfirm] = useState(false)
+  const [viewing, setViewing] = useState(false)
   const [, tick] = useState(0)
 
   // Refresca "hace X minutos".
@@ -76,14 +78,33 @@ export const NoteCard = memo(function NoteCard({ note, me, onHeart, onDelete, co
       <span className={styles.tape} aria-hidden />
 
       {note.kind === 'drawing' && src && (
-        <img
-          className={styles.drawing}
+        <div className={styles.drawingWrap}>
+          <img
+            className={styles.drawing}
+            src={src}
+            alt={note.text ? `Dibujo: ${note.text}` : 'Dibujo'}
+            width={note.image?.w}
+            height={note.image?.h}
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+          />
+          {!compact && (
+            <button type="button" className={styles.expand} onClick={() => setViewing(true)} aria-label="Ver el dibujo en grande">
+              <Maximize2 aria-hidden strokeWidth={2} />
+            </button>
+          )}
+        </div>
+      )}
+      {viewing && src && (
+        <DrawingViewer
+          open
+          onClose={() => setViewing(false)}
           src={src}
-          alt={note.text ? `Dibujo: ${note.text}` : 'Dibujo'}
-          width={note.image?.w}
-          height={note.image?.h}
-          loading="lazy"
-          draggable={false}
+          paper={PAPER[note.color].bg}
+          caption={note.text}
+          w={note.image?.w ?? 720}
+          h={note.image?.h ?? 720}
         />
       )}
       {note.text && <p className={cx(styles.text, note.kind === 'drawing' && styles.caption)}>{note.text}</p>}

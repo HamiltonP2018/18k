@@ -42,4 +42,10 @@ export const STORAGE_KEYS = {
   openWhen: 'nh:open-when',
   /** Color de papel elegido la última vez. */
   noteColor: 'nh:note-color',
+  /** Dibujo a medio hacer (se conserva si se cierra la app sin enviarlo). */
+  drawingDraft: 'nh:drawing-draft',
+  /** Pincel, color, grosores y colores recientes del lienzo. */
+  drawSettings: 'nh:draw-settings',
+  /** Ya vio la ayuda de gestos del lienzo. */
+  drawTips: 'nh:draw-tips',
 } as const
